@@ -100,7 +100,7 @@ Zostaniesz poproszony o podanie hasła do konta użytkownika. Wprowadź hasło i
 Poniżej znajduje się kod skryptu commit_generator.py, który należy umieścić w katalogu z repozytorium:
 
 python
-
+```bash
 import time
 import subprocess
 import json
@@ -144,22 +144,25 @@ def main():
 
 if __name__ == '__main__':
     main()
+```
 ## Plik config.json
 Poniżej znajduje się przykład pliku config.json, który należy umieścić w katalogu z repozytorium:
 
 json
-
+```bash
 {
     "last_commit_date": "",
     "commit_count": 0
 }
+```
 ## Konfiguracja Git
 Upewnij się, że masz skonfigurowane zdalne repozytorium:
 
-bash
+```bash
 
 git init
 git remote add origin <URL_DO_TWOJEGO_REPOZYTORIUM>
+```
 ## Uruchamianie skryptu
 Skrypt będzie uruchamiany automatycznie przez Harmonogram zadań zgodnie z ustawieniami, co godzin
 
