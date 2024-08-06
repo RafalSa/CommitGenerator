@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import time
 import subprocess
 import json
@@ -54,6 +56,7 @@ def main():
         
         # Czekaj przez 10 minut przed kolejnym dodaniem kropki
         time.sleep(INTERVAL)
+        
 
 if __name__ == '__main__':
     main()
