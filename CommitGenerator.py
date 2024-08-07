@@ -24,17 +24,17 @@ def save_config(config):
     with open(CONFIG_FILE, 'w') as file:
         json.dump(config, file)
 
-def add_dot_to_readme(file_path):
+def add_dot_to_file(file_path):
     with open(file_path, 'a') as file:
         file.write('.')
 
 def commit_and_push_changes():
-    subprocess.run(['git', 'add', 'ReadMe.txt'])
-    subprocess.run(['git', 'commit', '-m', 'Add dot to ReadMe'])
+    subprocess.run(['git', 'add', 'ReadMe.txt', 'README.md'])
+    subprocess.run(['git', 'commit', '-m', 'Add dot to files'])
     subprocess.run(['git', 'push'])
 
 def main():
-    file_path = 'ReadMe.txt'
+    files = ['ReadMe.txt', 'README.md']
     config = load_config()
 
     # Rejestracja czasu rozpoczêcia dzia³ania
@@ -46,8 +46,9 @@ def main():
             config['last_commit_date'] = current_date
             config['commit_count'] = 0
 
-        if config['commit_count'] < 5:
-            add_dot_to_readme(file_path)
+        if config['commit_count'] < 6:
+            for file_path in files:
+                add_dot_to_file(file_path)
             commit_and_push_changes()
             config['commit_count'] += 1
             save_config(config)
