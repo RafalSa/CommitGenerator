@@ -46,7 +46,7 @@ def main():
             config['last_commit_date'] = current_date
             config['commit_count'] = 0
 
-        if config['commit_count'] < 6:
+        if config['commit_count'] < 7:
             for file_path in files:
                 add_dot_to_file(file_path)
             commit_and_push_changes()
