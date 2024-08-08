@@ -7,8 +7,8 @@ from datetime import datetime
 import os
 
 CONFIG_FILE = 'config.json'
-RUN_DURATION = 3600  # Czas dzia³ania skryptu w sekundach (1 godzina)
-INTERVAL = 600       # Czas miêdzy dodawaniem kropek w sekundach (10 minut)
+RUN_DURATION = 3600  # Czas dzia³ania skryptu w sekundach
+INTERVAL = 500       # Czas miêdzy dodawaniem kropek w sekundach
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
