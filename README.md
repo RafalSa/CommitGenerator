@@ -1,6 +1,6 @@
-# CommitGenerator - Skrypt Dodający Kropkę do Pliku ReadMe Codziennie (max 5 razy dziennie)
+# CommitGenerator - Skrypt Dodający Kropkę do Pliku ReadMe Codziennie (max 7 razy dziennie)
 
-Ten projekt zawiera skrypt w Pythonie, który dodaje kropkę do pliku `ReadMe.txt` co godzinę, maksymalnie 5 razy dziennie. Zmiany są automatycznie commitowane i pushowane do zdalnego repozytorium GitHub. Zadanie jest skonfigurowane za pomocą Harmonogramu zadań (Task Scheduler) w systemie Windows.
+Ten projekt zawiera skrypt w Pythonie, który dodaje kropkę do pliku `ReadMe.txt`oraz 'README.md'  co 500sekund, maksymalnie 7 razy dziennie. Zmiany są automatycznie commitowane i pushowane do zdalnego repozytorium GitHub. Zadanie jest skonfigurowane za pomocą Harmonogramu zadań (Task Scheduler) w systemie Windows.
 
 ## Spis treści
 
@@ -30,7 +30,7 @@ Ten projekt zawiera skrypt w Pythonie, który dodaje kropkę do pliku `ReadMe.tx
 
 ## Pliki w repozytorium
 
-- `commit_generator.py`: Skrypt Python dodający kropkę do pliku `ReadMe.txt`, commitujący i pushujący zmiany do GitHub.
+- `CommitGenerator.py`: Skrypt Python dodający kropkę do pliku `ReadMe.txt`, commitujący i pushujący zmiany do GitHub.
 - `config.json`: Plik konfiguracyjny przechowujący informacje o liczbie commitów wykonanych danego dnia.
 - `ReadMe.txt`: Plik, do którego będą dodawane kropki.
 
@@ -40,8 +40,9 @@ Ten projekt zawiera skrypt w Pythonie, który dodaje kropkę do pliku `ReadMe.tx
 
    Skopiuj repozytorium na swój komputer:
    ```bash
-   git clone <URL_DO_TWOJEGO_REPOZYTORIUM>
-   cd <NAZWA_REPOZYTORIUM>
+   git clone <https://github.com/RafalSa/CommitGenerator>
+   cd <CommitGenerator>
+   ```
 Zainstaluj Python i Git:
 
 Upewnij się, że Python i Git są zainstalowane na Twoim komputerze. Możesz je pobrać i zainstalować z oficjalnych stron:
@@ -54,7 +55,7 @@ Skonfiguruj zdalne repozytorium:
 
 bash
 
-git remote add origin <URL_DO_TWOJEGO_REPOZYTORIUM>
+git remote add origin <https://github.com/RafalSa/CommitGenerator>
 Sprawdź ścieżki:
 
 Znajdź ścieżkę do interpretera Python:
@@ -101,49 +102,70 @@ Poniżej znajduje się kod skryptu commit_generator.py, który należy umieści�
 
 python
 ```bash
+# -*- coding: utf-8 -*-
+
 import time
 import subprocess
 import json
 from datetime import datetime
+import os
 
 CONFIG_FILE = 'config.json'
+RUN_DURATION = 3600
+INTERVAL = 500
 
 def load_config():
-    with open(CONFIG_FILE, 'r') as file:
-        return json.load(file)
+    if not os.path.exists(CONFIG_FILE):
+        # Jeśli plik konfiguracyjny nie istnieje, stwórz nowy z domyślnymi wartościami
+        config = {"last_commit_date": "", "commit_count": 0}
+        save_config(config)
+    else:
+        with open(CONFIG_FILE, 'r') as file:
+            config = json.load(file)
+    return config
 
 def save_config(config):
     with open(CONFIG_FILE, 'w') as file:
         json.dump(config, file)
 
-def add_dot_to_readme(file_path):
+def add_dot_to_file(file_path):
     with open(file_path, 'a') as file:
         file.write('.')
 
 def commit_and_push_changes():
-    subprocess.run(['git', 'add', 'ReadMe.txt'])
-    subprocess.run(['git', 'commit', '-m', 'Add dot to ReadMe'])
+    subprocess.run(['git', 'add', 'ReadMe.txt', 'README.md'])
+    subprocess.run(['git', 'commit', '-m', 'Add dot to files'])
     subprocess.run(['git', 'push'])
 
 def main():
-    file_path = 'ReadMe.txt'
+    files = ['ReadMe.txt', 'README.md']
     config = load_config()
 
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    if config['last_commit_date'] != current_date:
-        config['last_commit_date'] = current_date
-        config['commit_count'] = 0
+    # Rejestracja czasu rozpoczęcia działania
+    start_time = time.time()
+    
+    while time.time() - start_time < RUN_DURATION:
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        if config['last_commit_date'] != current_date:
+            config['last_commit_date'] = current_date
+            config['commit_count'] = 0
 
-    if config['commit_count'] < 5:
-        add_dot_to_readme(file_path)
-        commit_and_push_changes()
-        config['commit_count'] += 1
-        save_config(config)
-    else:
-        print("Reached maximum number of commits for today.")
+        if config['commit_count'] < 7:
+            for file_path in files:
+                add_dot_to_file(file_path)
+            commit_and_push_changes()
+            config['commit_count'] += 1
+            save_config(config)
+        else:
+            print("Reached maximum number of commits for today.")
+        
+        # Czekaj przez 10 minut przed kolejnym dodaniem kropki
+        time.sleep(INTERVAL)
+        
 
 if __name__ == '__main__':
     main()
+
 ```
 ## Plik config.json
 Poniżej znajduje się przykład pliku config.json, który należy umieścić w katalogu z repozytorium:
@@ -164,9 +186,9 @@ git init
 git remote add origin <URL_DO_TWOJEGO_REPOZYTORIUM>
 ```
 ## Uruchamianie skryptu
-Skrypt będzie uruchamiany automatycznie przez Harmonogram zadań zgodnie z ustawieniami, co godzin
+Skrypt będzie uruchamiany automatycznie przez Harmonogram zadań zgodnie z ustawieniami.
 
 
 
 
-........................
+......................
